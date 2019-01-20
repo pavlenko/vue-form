@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="bower_components/bootstrap-duration-picker/dist/bootstrap-duration-picker.css">
+    <link rel="stylesheet" href="bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css">
+    <link rel="stylesheet" href="bower_components/seiyria-bootstrap-slider/dist/css/bootstrap-slider.css">
+</head>
+<body>
+<div class="container">
+    <div id="app"></div>
+</div>
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="bower_components/vue/dist/vue.min.js"></script>
+<script src="bower_components/bootstrap-duration-picker/dist/bootstrap-duration-picker.js"></script>
+<script src="bower_components/bootstrap-timepicker/js/bootstrap-timepicker.js"></script>
+<script src="bower_components/moment/moment.js"></script>
+<script src="bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+<script src="bower_components/seiyria-bootstrap-slider/dist/bootstrap-slider.js"></script>
+<script src="vue-form.js"></script>
+<script>
+    Vue.component('vue-form', {
+        data: function () {
+            return {
+                data: {
+                    text: null,
+                    textarea: null,
+                    duration: 60,
+                    date: '2018-10-15',
+                    time: '18:51:12',
+                    range: null//[10, 90]
+                }
+            };
+        },
+        template:
+            '<form class="form-horizontal" v-on:submit.prevent>' +
+            '    <div class="page-header">' +
+            '        <h4>Base Fields</h4>' +
+            '    </div>' +
+            '    <vue-form-group label="Text">' +
+            '        <vue-form-input name=text v-model="data.text"></vue-form-input>' +
+            '    </vue-form-group>' +
+            '    <vue-form-group label="Textarea">' +
+            '        <vue-form-textarea name=textarea v-model="data.textarea"></vue-form-textarea>' +
+            '    </vue-form-group>' +
+            '    <div class="page-header">' +
+            '        <h4>Custom Fields</h4>' +
+            '    </div>' +
+            '    <vue-form-group label="Duration">' +
+            '        <vue-form-duration name=duration v-model="data.duration"></vue-form-duration>' +
+            '    </vue-form-group>' +
+            '    <vue-form-group label="Date">' +
+            '        <vue-form-date name=date v-model="data.date"></vue-form-date>' +
+            '    </vue-form-group>' +
+            '    <vue-form-group label="Time">' +
+            '        <vue-form-time name=time v-model="data.time"></vue-form-time>' +
+            '    </vue-form-group>' +
+            '    <vue-form-group label="Slider Range">' +
+            '        <vue-form-range name=range :range="true" v-model="data.range"></vue-form-range>' +
+            '    </vue-form-group>' +
+            '    <div class="clearfix">{{ data }}</div>' +
+            '</form>'
+    });
+
+    new Vue({
+        el: '#app',
+        template: '<vue-form></vue-form>'
+    });
+</script>
+</body>
+</html>
