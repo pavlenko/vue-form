@@ -1,7 +1,3 @@
-//TODO handle horizontal form
-//TODO add date/time/duration pickers
-//TODO add base html fields
-
 Vue.component('vue-form-group', {
     props: {
         label: {type: [String, Boolean], default: ''}
@@ -16,7 +12,7 @@ Vue.component('vue-form-group', {
         '</div>'
 });
 
-var VueFormImport = Vue.component('vue-form-input', {
+var VueFormInput = Vue.component('vue-form-input', {
     props: {
         name:  {type: String},
         type:  {type: String, default: 'text'},
@@ -138,7 +134,7 @@ Vue.component('vue-form-choice', {
 });
 
 Vue.component('vue-form-duration', {
-    extends: VueFormImport,
+    extends: VueFormInput,
     mounted: function () {
         $(this.$refs.field).durationPicker({
             onChanged: function (value) { this.$emit('input', value); }.bind(this)
@@ -147,7 +143,7 @@ Vue.component('vue-form-duration', {
 });
 
 Vue.component('vue-form-date', {
-    extends: VueFormImport,
+    extends: VueFormInput,
     props: {
         name:        {type: String},
         value:       {type: String},
@@ -181,7 +177,7 @@ Vue.component('vue-form-date', {
 });
 
 Vue.component('vue-form-time', {
-    extends: VueFormImport,
+    extends: VueFormInput,
     props: {
         name:        {type: String},
         value:       {type: String},
@@ -215,7 +211,7 @@ Vue.component('vue-form-time', {
 });
 
 Vue.component('vue-form-range', {
-    extends: VueFormImport,
+    extends: VueFormInput,
     props: {
         name:  {type: String},
         value: {type: [String, Number, Array]},
