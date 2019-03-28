@@ -39,8 +39,8 @@ Vue.component('vue-form-number', {
     },
     computed: {
         _value: {
-            get: function () { return this.value; },
-            set: function (val) { this.$emit('input', val); }
+            get: function () { return (this.value * 1) || 0; },
+            set: function (val) { this.$emit('input', val * 1); }
         }
     },
     template:
@@ -50,7 +50,7 @@ Vue.component('vue-form-number', {
         '            <i class="fa fa-fw fa-minus"></i>' +
         '        </button>' +
         '    </span>' +
-        '    <input type="text" ref="field" class="form-control" :id="_uid" :name="name" :min="min" :max="max" v-model="_value">' +
+        '    <input type="text" ref="field" class="form-control" :id="_uid" :name="name" :min="min" :max="max" v-model="_value" v-on:keypress="isNumber($event)">' +
         '    <span class="input-group-btn">' +
         '        <button :disabled="null !== max && max <= _value" :class="\'btn btn-default \' + (size ? \'btn-\' + size : \'\')" type="button" v-on:click="increment()">' +
         '            <i class="fa fa-fw fa-plus"></i>' +
@@ -58,6 +58,15 @@ Vue.component('vue-form-number', {
         '    </span>' +
         '</div>',
     methods: {
+        isNumber: function(event) {
+            var charCode = (event.which) ? event.which : event.keyCode;
+
+            if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
+                event.preventDefault();
+            } else {
+                return true;
+            }
+        },
         decrement: function () {
             this._value -= this.step;
         },
@@ -200,6 +209,8 @@ Vue.component('vue-form-date', {
         inline:      {type: Boolean, default: false},
         formatValue: {type: String, default: 'YYYY-MM-DD'},
         formatView:  {type: String, default: 'L'},
+        minDate:     {type: [String, Boolean], default: false},
+        maxDate:     {type: [String, Boolean], default: false}
     },
     template:
         '<div v-if="inline">' +
@@ -215,15 +226,25 @@ Vue.component('vue-form-date', {
         '</div>',
     mounted: function () {
         $(this.$refs.picker).datetimepicker({
-            format: this.formatView,
-            date:   moment(this.value, this.formatValue),
-            inline: this.inline
+            format:  this.formatView,
+            date:    moment(this.value, this.formatValue),
+            inline:  this.inline,
+            minDate: this.minDate,
+            maxDate: this.maxDate
         }).on('dp.change', function (event) {
             var time = event.date ? event.date.format(this.formatValue) : null;
 
             this.$refs.field.value = time;
             this.$emit('input', time);
         }.bind(this))
+    },
+    watch: {
+        minDate: function (value) {
+            $(this.$refs.picker).data("DateTimePicker").minDate(value ? moment(value, this.formatValue) : false);
+        },
+        maxDate: function (value) {
+            $(this.$refs.picker).data("DateTimePicker").maxDate(value ? moment(value, this.formatValue) : false);
+        }
     }
 });
 
