@@ -14,10 +14,11 @@ Vue.component('vue-form-group', {
 
 var VueFormInput = Vue.component('vue-form-input', {
     props: {
-        size:  {type: String},
-        name:  {type: String},
-        type:  {type: String, default: 'text'},
-        value: {type: [String, Number]},
+        size:     {type: String},
+        name:     {type: String},
+        type:     {type: String, default: 'text'},
+        value:    {type: [String, Number]},
+        readonly: {type: Boolean, default: false}
     },
     computed: {
         _value: {
@@ -30,12 +31,13 @@ var VueFormInput = Vue.component('vue-form-input', {
 
 Vue.component('vue-form-number', {
     props: {
-        size:  {type: String},
-        name:  {type: String},
-        value: {type: [String, Number], default: 0},
-        step:  {type: Number, default: 1, validator: function (value) { return value > 0; }},
-        min:   {type: Number, default: null},
-        max:   {type: Number, default: null}
+        size:     {type: String},
+        name:     {type: String},
+        value:    {type: [String, Number], default: 0},
+        step:     {type: Number, default: 1, validator: function (value) { return value > 0; }},
+        min:      {type: Number, default: null},
+        max:      {type: Number, default: null},
+        readonly: {type: Boolean, default: false}
     },
     computed: {
         _value: {
@@ -50,7 +52,7 @@ Vue.component('vue-form-number', {
         '            <i class="fa fa-fw fa-minus"></i>' +
         '        </button>' +
         '    </span>' +
-        '    <input type="text" ref="field" class="form-control" :id="_uid" :name="name" :min="min" :max="max" v-model="_value" v-on:keypress="isNumber($event)">' +
+        '    <input type="text" ref="field" class="form-control" :id="_uid" :name="name" :min="min" :max="max" :readonly="readonly" v-model="_value" v-on:keypress="isNumber($event)">' +
         '    <span class="input-group-btn">' +
         '        <button :disabled="null !== max && max <= _value" :class="\'btn btn-default \' + (size ? \'btn-\' + size : \'\')" type="button" v-on:click="increment()">' +
         '            <i class="fa fa-fw fa-plus"></i>' +
@@ -69,9 +71,11 @@ Vue.component('vue-form-number', {
         },
         decrement: function () {
             this._value -= this.step;
+            this.$emit('decrement')
         },
         increment: function () {
             this._value += this.step;
+            this.$emit('increment')
         }
     }
 });
@@ -105,7 +109,7 @@ Vue.component('vue-form-checkbox', {
         }
     },
     template:
-        '<div :class="inline ? \'checkbox-inline\' : \'checkbox\'" :style="inline ? \'margin-left: 0; margin-right: 10px;\' : null">' +
+        '<div :class="inline ? \'checkbox-inline\' : \'checkbox\'" :style="inline ? \'margin-left: 0; margin-right: 10px;\' : \'\'">' +
         '    <label>' +
         '        <input ref="field" type="checkbox" :id="_uid" :name="name" v-model="_value" :value="check"> {{ label }}' +
         '    </label>' +
@@ -127,7 +131,7 @@ Vue.component('vue-form-radio', {
         }
     },
     template:
-        '<div :class="inline ? \'radio-inline\' :  \'radio\'" :style="inline ? \'margin-left: 0; margin-right: 10px;\' : null">' +
+        '<div :class="inline ? \'radio-inline\' :  \'radio\'" :style="inline ? \'margin-left: 0; margin-right: 10px;\' : \'\'">' +
         '    <label>' +
         '        <input ref="field" type="radio" :id="_uid" :name="name" v-model="_value" :value="check"> {{ label }}' +
         '    </label>' +
@@ -177,7 +181,15 @@ Vue.component('vue-form-choice', {
     mounted: function () {
         if (!this.expanded) {
             $(this.$el).val(this.value).on('change', function (event) {
-                this.$emit('input', this.multiple ? $(event.target).val() || [] : $(event.target).val());
+                var value;
+
+                if (this.multiple) {
+                    value = ($(event.target).val() || []).filter(function (value) { return !!value });
+                } else {
+                    value = $(event.target).val();
+                }
+
+                this.$emit('input', value);
             }.bind(this));
         } else if (!this.multiple) {
             $(this.$el).find(':radio').val([this.value]).on('change', function (event) {
@@ -193,9 +205,16 @@ Vue.component('vue-form-choice', {
 
 Vue.component('vue-form-duration', {
     extends: VueFormInput,
+    props: {
+        showSeconds: {type: Boolean, default: false},
+        showDays:    {type: Boolean, default: false}
+    },
+    template: '<div><input ref="field" :class="\'form-control\' + (size ? \' input-\' + size : \'\')" :id="_uid" :name="name" :type="type" v-model="_value"></div>',
     mounted: function () {
         $(this.$refs.field).durationPicker({
-            onChanged: function (value) { this.$emit('input', value); }.bind(this)
+            showSeconds: this.showSeconds,
+            showDays:    this.showDays,
+            onChanged:   function (value) { this.$emit('input', value); }.bind(this)
         });
     }
 });
@@ -217,7 +236,7 @@ Vue.component('vue-form-date', {
         '    <input ref="field" type="hidden" :id="_uid" :name="name" v-model="_value">' +
         '    <div ref="picker"></div>' +
         '</div>' +
-        '<div v-else :class="\'input-group\' + (size ? \' input-group-\' + size : null)">' +
+        '<div v-else :class="\'input-group\' + (size ? \' input-group-\' + size : \'\')">' +
         '    <input ref="field" type="hidden" :id="_uid" :name="name" v-model="_value">' +
         '    <input ref="picker" type="text" class="form-control">' +
         '    <span class="input-group-addon">' +
@@ -251,6 +270,7 @@ Vue.component('vue-form-date', {
 Vue.component('vue-form-time', {
     extends: VueFormInput,
     props: {
+        size:        {type: String},
         name:        {type: String},
         value:       {type: String},
         inline:      {type: Boolean, default: false},
@@ -261,7 +281,7 @@ Vue.component('vue-form-time', {
         '<div>' +
         '    <input ref="field" type="hidden" :id="_uid" :name="name" v-model="_value">' +
         '    <div v-if="inline" ref="picker"></div>' +
-        '    <div v-else class="input-group">' +
+        '    <div v-else :class="\'input-group\' + (size ? \' input-group-\' + size : \'\')">' +
         '        <input ref="picker" type="text" class="form-control">' +
         '        <span class="input-group-addon">' +
         '            <span class="fa fa-clock-o"></span>' +
@@ -285,22 +305,26 @@ Vue.component('vue-form-time', {
 Vue.component('vue-form-range', {
     extends: VueFormInput,
     props: {
-        name:  {type: String},
-        value: {type: [String, Number, Array]},
-        range: {type: Boolean, default: false},
-        step:  {type: Number, default: 1},
-        min:   {type: Number, default: 0},
-        max:   {type: Number, default: 100}
+        name:    {type: String},
+        value:   {type: [String, Number, Array]},
+        range:   {type: Boolean, default: false},
+        step:    {type: Number, default: 1},
+        min:     {type: Number, default: 0},
+        max:     {type: Number, default: 100},
+        tooltip: {type: String, validate: function (val) { return ['show', 'hide', 'always'].indexOf(val) !== -1; }},
+        handle:  {type: String, validate: function (val) { return ['round', 'square'].indexOf(val) !== -1; }}
     },
     template:
-        '<input ref="field" type="range" :id="_uid" :name="name" :min="min" :max="max" :step="step" v-model="_value">',
+        '<input ref="field" type="range" :id="_uid" :name="name" :min="min" :max="max" :step="step" v-model="_value" class="form-control">',
     mounted: function () {
-        new Slider(this.$refs.field, {
-            range: this.range,
-            step:  this.step,
-            min:   this.min,
-            max:   this.max,
-            value: this.range && !(this.value instanceof Array) ? [this.min, this.max] : this.value
+        this.slider = new Slider(this.$refs.field, {
+            range:   this.range,
+            step:    this.step,
+            min:     this.min,
+            max:     this.max,
+            value:   this.range && !(this.value instanceof Array) ? [this.min, this.max] : this.value || 0,
+            tooltip: this.tooltip,
+            handle:  this.handle || 'square'
         }).on('change', function (data) {
             this.$emit('input', data.newValue);
         }.bind(this));
