@@ -1,3 +1,10 @@
+var VueForm = {
+    components: {},
+    install: function (vue, options) {
+        //TODO register all components in global scope
+    }
+};
+
 Vue.component('vue-form-group', {
     props: {
         label: {type: [String, Boolean], default: ''}
