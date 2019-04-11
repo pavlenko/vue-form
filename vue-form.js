@@ -7,15 +7,21 @@ var VueForm = {
     }
 };
 
-VueForm.components['v-form-widget'] = Vue.extend({
-    props: {
-        label: {type: [String, Boolean], default: ''}
+VueForm.components['v-form-label'] = Vue.extend({
+    template: '<label />'
+});
+
+VueForm.components['v-form-error'] = Vue.extend({
+    template: '<div />'
+});
+
+VueForm.components['v-form-group'] = Vue.extend({
+    mounted: function () {
+        console.log(this.$children.filter(function (component) { return component instanceof VueForm.components['v-form-input']; }))
     },
     template:
         '<div>' +
-        '    <div>{{ label }}</div>' +
         '    <slot />' +
-        '    <div>{{ errors }}</div>' +
         '</div>'
 });
 
