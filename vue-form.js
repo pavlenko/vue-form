@@ -10,13 +10,72 @@ var VueForm = {
 //TODO min/max items, add/del item
 VueForm.components['v-form-collection'] = Vue.extend({
     props: {
-        type: {type: String, default: function () { return 'v-form-input'; }},
-        data: {type: Array, default: function () { return []; }}
+        value: {type: Array, default: function () { return []; }},
+        min: {
+            type:    Number,
+            default: 0,
+            validator: function (val) { return this.max > 0 && this.max > val; }
+        },
+        max: {
+            type:      Number,
+            default:   0,
+            validator: function (val) { return this.min >= 0 && this.min < val; }
+        },
+        allowInsert: {
+            type:    Boolean,
+            default: false
+        },
+        allowDelete: {
+            type:    Boolean,
+            default: false
+        },
+        entryType: {
+            type:    String,
+            default: 'v-form-input'
+        },
+        entryOptions: {
+            type:    Object,
+            default: function () { return {}; }
+        },
+        entryDefaults: {
+            type:    [String, Number, Array, Object],
+            default: function () { return null; }
+        }
+    },
+    computed: {
+        _value: function () {
+            var value = [];
+
+            this.value.forEach(function (item) {
+                value.push(item);
+            });
+
+            if (this.min > 0) {
+                while (value.length < this.min) {
+                    value.push(this.entryDefaults);
+                }
+            }
+
+            return value;
+        }
     },
     template:
         '<div>' +
-        '    <component is="type" v-for="(item, key) in data" :key="key" v-bind="options" :value="item"></component>' +
-        '</div>'
+        '    <component is="entryType" v-for="(item, key) in _value" :key="key" v-bind="entryOptions" :value="item">' +
+        '        <button type="button" v-if="allowDelete" v-on:click="onDelete(key)">Delete</button>' +
+        '    </component>' +
+        '    <button type="button" v-if="allowInsert && (_value.length < max || max <= 0)" v-on:click="onInsert">Insert</button>' +
+        '</div>',
+    methods: {
+        onInsert: function () {
+            this._value.push(this.entryDefaults);
+            this.$emit('input', this._value);
+        },
+        onDelete: function (key) {
+            this._value.splice(key, 1);
+            this.$emit('input', this._value);
+        }
+    }
 });
 
 Vue.component('vue-form-group', {
