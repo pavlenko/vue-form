@@ -9,24 +9,42 @@ var VueForm = {
 
 VueForm.components['v-form-input'] = Vue.extend({
     props: {
-        value: String
+        value: [String, Number]
     },
-    template: '<div><input value="value"><slot/></div>'
+    computed: {
+        _value: {
+            get: function () {
+                return this.value;
+                },
+            set: function (value) {
+                this.$emit('input', value);
+            }
+        }
+    },
+    template: '<input v-model="_value">',
+    methods: {
+        validate: function () {
+            //TODO must return boolean true if valid, false otherwise
+            //TODO must fill internal errors property
+        }
+    }
 });
 
-//TODO min/max items, add/del item
-VueForm.components['v-form-collection'] = Vue.extend({
+VueForm.components['v-form-collection'] = VueForm.components['v-form-input'].extend({
     props: {
-        value: {type: Array, default: function () { return []; }},
-        min: {
+        value: {
+            type: Array,
+            default: function () { return []; }
+        },
+        minChildren: {
             type:    Number,
             default: 0,
-            validator: function (val) { return this.max > 0 && this.max > val; }
+            validator: function (val) { return this.maxChildren > 0 && this.maxChildren > val; }
         },
-        max: {
+        maxChildren: {
             type:      Number,
             default:   0,
-            validator: function (val) { return this.min >= 0 && this.min < val; }
+            validator: function (val) { return this.minChildren >= 0 && this.minChildren < val; }
         },
         allowInsert: {
             type:    Boolean,
@@ -49,41 +67,38 @@ VueForm.components['v-form-collection'] = Vue.extend({
             default: function () { return null; }
         }
     },
-    computed: {
-        _value: function () {
-            var value = [];
-
-            this.value.forEach(function (item) {
-                value.push(item);
-            });
-
-            if (this.min > 0) {
-                while (value.length < this.min) {
-                    value.push(this.entryDefaults);
-                }
-            }
-
-            return value;
-        }
-    },
     template:
         '<div>' +
-        '    <component :is="entryType" v-for="(item, key) in _value" :key="key" v-bind="entryOptions" :value="item">' +
-        '        <button type="button" v-if="allowDelete && key > min - 1" v-on:click="delete(key)">Delete</button>' +
-        '    </component>' +
-        '    <button type="button" v-if="allowInsert && (_value.length < max || max <= 0)" v-on:click="insert(entryDefaults)">Insert</button>' +
+        '    <div v-for="(item, index) in _value" :key="index">' +
+        '        <component :is="entryType" ref="children" v-bind="entryOptions" v-model="_value[index]" />' +
+        '        <button type="button" v-if="allowDelete" :disabled="_value.length <= minChildren" v-on:click="remove(index)">Delete</button>' +
+        '    </div>' +
+        '    <button type="button" v-if="allowInsert" :disabled="_value.length >= maxChildren && maxChildren > 0" v-on:click="insert(entryDefaults)">Insert</button>' +
         '</div>',
     mounted: function () {
-        this.$emit('input', this._value);
+        if (this.minChildren > 0) {
+            while (this._value.length < this.minChildren) {
+                this._value.push(this.entryDefaults);
+            }
+        }
     },
     methods: {
         insert: function (value) {
             this._value.push(value);
-            this.$emit('input', this._value);
         },
-        delete: function (index) {
-            this._value = this._value.slice(index, 1);
-            this.$emit('input', this._value);
+        remove: function (index) {
+            this._value.splice(index, 1);
+        },
+        validate: function () {
+            var valid = true;
+
+            if (Array.isArray(this.$refs.children)) {
+                this.$refs.children.forEach(function (child) {
+                    valid = child.validate() && valid
+                });
+            }
+
+            return valid;
         }
     }
 });

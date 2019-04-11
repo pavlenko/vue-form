@@ -29,9 +29,22 @@
         },
         template:
             '<form class="form-horizontal" v-on:submit.prevent>' +
-            '    <v-form-collection v-model="data.collection" :min="2" entry-defaults="AAA" allow-insert="true" allow-delete="true"/>' +
-            '    <div class="clearfix">{{ data }}</div>' +
-            '</form>'
+            '    <v-form-collection v-model="data.collection" ref="children" :min-children="2" :max-children="5" entry-defaults="AAA" allow-insert="true" allow-delete="true"/>' +
+            '    <div class="clearfix" v-on:click="validate">{{ data }}</div>' +
+            '</form>',
+        methods: {
+            validate: function () {
+                var valid;
+
+                if (Array.isArray(this.$refs.children)) {
+                    this.$refs.children.forEach(function (child) {
+                        child.validate()
+                    });
+                } else {
+                    this.$refs.children.validate();
+                }
+            }
+        }
     });
 
     new Vue({
