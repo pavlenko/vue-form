@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+</head>
+<body>
+<div class="container">
+    <div id="app"></div>
+</div>
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="bower_components/vue/dist/vue.min.js"></script>
+<script src="vue-form.js"></script>
+<script>
+    Vue.use(VueForm);
+
+    Vue.component('vue-form', {
+        data: function () {
+            return {
+                data: {
+                    collection: []
+                }
+            };
+        },
+        template:
+            '<form class="form-horizontal" v-on:submit.prevent>' +
+            '    <v-form-collection v-model="data.collection" :min="2" entry-defaults="AAA" allow-insert="true" allow-delete="true"/>' +
+            '    <div class="clearfix">{{ data }}</div>' +
+            '</form>'
+    });
+
+    new Vue({
+        el: '#app',
+        template: '<vue-form></vue-form>'
+    });
+</script>
+</body>
+</html>

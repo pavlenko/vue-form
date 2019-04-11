@@ -7,6 +7,13 @@ var VueForm = {
     }
 };
 
+VueForm.components['v-form-input'] = Vue.extend({
+    props: {
+        value: String
+    },
+    template: '<div><input value="value"><slot/></div>'
+});
+
 //TODO min/max items, add/del item
 VueForm.components['v-form-collection'] = Vue.extend({
     props: {
@@ -61,18 +68,21 @@ VueForm.components['v-form-collection'] = Vue.extend({
     },
     template:
         '<div>' +
-        '    <component is="entryType" v-for="(item, key) in _value" :key="key" v-bind="entryOptions" :value="item">' +
-        '        <button type="button" v-if="allowDelete" v-on:click="onDelete(key)">Delete</button>' +
+        '    <component :is="entryType" v-for="(item, key) in _value" :key="key" v-bind="entryOptions" :value="item">' +
+        '        <button type="button" v-if="allowDelete && key > min - 1" v-on:click="delete(key)">Delete</button>' +
         '    </component>' +
-        '    <button type="button" v-if="allowInsert && (_value.length < max || max <= 0)" v-on:click="onInsert">Insert</button>' +
+        '    <button type="button" v-if="allowInsert && (_value.length < max || max <= 0)" v-on:click="insert(entryDefaults)">Insert</button>' +
         '</div>',
+    mounted: function () {
+        this.$emit('input', this._value);
+    },
     methods: {
-        onInsert: function () {
-            this._value.push(this.entryDefaults);
+        insert: function (value) {
+            this._value.push(value);
             this.$emit('input', this._value);
         },
-        onDelete: function (key) {
-            this._value.splice(key, 1);
+        delete: function (index) {
+            this._value = this._value.slice(index, 1);
             this.$emit('input', this._value);
         }
     }
