@@ -1,9 +1,23 @@
 var VueForm = {
     components: {},
     install: function (vue, options) {
-        //TODO register all components in global scope
+        Object.keys(VueForm.components).forEach(function (key) {
+            vue.component(key, VueForm.components[key]);
+        });
     }
 };
+
+//TODO min/max items, add/del item
+VueForm.components['v-form-collection'] = Vue.extend({
+    props: {
+        type: {type: String, default: function () { return 'v-form-input'; }},
+        data: {type: Array, default: function () { return []; }}
+    },
+    template:
+        '<div>' +
+        '    <component is="type" v-for="(item, key) in data" :key="key" v-bind="options" :value="item"></component>' +
+        '</div>'
+});
 
 Vue.component('vue-form-group', {
     props: {
