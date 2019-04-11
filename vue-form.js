@@ -7,6 +7,18 @@ var VueForm = {
     }
 };
 
+VueForm.components['v-form-widget'] = Vue.extend({
+    props: {
+        label: {type: [String, Boolean], default: ''}
+    },
+    template:
+        '<div>' +
+        '    <div>{{ label }}</div>' +
+        '    <slot />' +
+        '    <div>{{ errors }}</div>' +
+        '</div>'
+});
+
 VueForm.components['v-form-input'] = Vue.extend({
     props: {
         value: [String, Number]
@@ -33,18 +45,16 @@ VueForm.components['v-form-input'] = Vue.extend({
 VueForm.components['v-form-collection'] = VueForm.components['v-form-input'].extend({
     props: {
         value: {
-            type: Array,
+            type:    Array,
             default: function () { return []; }
         },
         minChildren: {
             type:    Number,
-            default: 0,
-            validator: function (val) { return this.maxChildren > 0 && this.maxChildren > val; }
+            default: 0
         },
         maxChildren: {
-            type:      Number,
-            default:   0,
-            validator: function (val) { return this.minChildren >= 0 && this.minChildren < val; }
+            type:    Number,
+            default: 0
         },
         allowInsert: {
             type:    Boolean,

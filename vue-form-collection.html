@@ -14,7 +14,7 @@
 </div>
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
 <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-<script src="bower_components/vue/dist/vue.min.js"></script>
+<script src="bower_components/vue/dist/vue.js"></script>
 <script src="vue-form.js"></script>
 <script>
     Vue.use(VueForm);
@@ -29,7 +29,7 @@
         },
         template:
             '<form class="form-horizontal" v-on:submit.prevent>' +
-            '    <v-form-collection v-model="data.collection" ref="children" :min-children="2" :max-children="5" entry-defaults="AAA" allow-insert="true" allow-delete="true"/>' +
+            '    <v-form-collection v-model="data.collection" ref="children" :min-children="2" :max-children="5" entry-defaults="AAA" :allow-insert="true" :allow-delete="true"/>' +
             '    <div class="clearfix" v-on:click="validate">{{ data }}</div>' +
             '</form>',
         methods: {
