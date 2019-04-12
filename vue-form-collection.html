@@ -52,9 +52,49 @@
         }
     });
 
+    Vue.component('list', {
+        props: {
+            items:{
+                type:    Array,
+                default: function () { return []; }
+            }
+        },
+        template:
+            '<div>' +
+            '    <div v-for="item in items">' +
+            '        <slot :item="item">' +
+            '            <!-- fallback content here -->' +
+            '        </slot>' +
+            '        <button>A</button>' +
+            '    </div>' +
+            '</div>',
+        mounted: function () {
+            this.$nextTick(function () {
+                console.log(this);
+            });
+        }
+    });
+
+    Vue.component('test', {
+        data: function () {
+            return {
+                items: [
+                    {text: 'A'},
+                    {text: 'B'}
+                ]
+            };
+        },
+        template:
+            '<list :items="items">' +
+            '    <div slot-scope="{item: item}">' +
+            '       {{ item.text }}' +
+            '    </div>' +
+            '</list>'
+    });
+
     new Vue({
         el: '#app',
-        template: '<vue-form></vue-form>'
+        template: '<div><vue-form></vue-form><test></test></div>'
     });
 </script>
 </body>
