@@ -29,15 +29,18 @@
         },
         template:
             '<form class="form-horizontal" v-on:submit.prevent>' +
-            '    <v-form-collection v-model="data.collection" ref="children" :min-children="2" :max-children="5" entry-defaults="AAA" :allow-insert="true" :allow-delete="true"/>' +
-            '    <v-form-group>' +
-            '        <v-form-label />' +
-            '        <v-form-input />' +
-            '        <v-form-error />' +
-            '    </v-form-group>' +
+            '    <v-form-collection v-model="data.collection" ref="children" :min-children="2" :max-children="5" entry-defaults="AAA" :allow-insert="true" :allow-delete="true">' +
+            '        <v-form-input slot-scope="{value: value}" v-model="value" v-on:input="value = $event">{{ value }}</v-form-input>' +
+            '    </v-form-collection>' +
+            // '    <v-form-group>' +
+            // '        <v-form-label />' +
+            // '        <v-form-input />' +
+            // '        <v-form-error />' +
+            // '    </v-form-group>' +
             '    <div class="clearfix" v-on:click="validate">{{ data }}</div>' +
             '</form>',
         methods: {
+            test2: function () { console.log(arguments); },
             validate: function () {
                 var valid;
 

@@ -39,7 +39,7 @@ VueForm.components['v-form-input'] = Vue.extend({
             }
         }
     },
-    template: '<input v-model="_value">',
+    template: '<div><input v-model="_value"><slot /></div>',
     methods: {
         validate: function () {
             //TODO must return boolean true if valid, false otherwise
@@ -86,7 +86,7 @@ VueForm.components['v-form-collection'] = VueForm.components['v-form-input'].ext
     template:
         '<div>' +
         '    <div v-for="(item, index) in _value" :key="index">' +
-        '        <component :is="entryType" ref="children" v-bind="entryOptions" v-model="_value[index]" />' +
+        '        <slot ref="children" v-bind="entryOptions" v-bind:value="_value[index]" v-on:input="test" />' +
         '        <button type="button" v-if="allowDelete" :disabled="_value.length <= minChildren" v-on:click="remove(index)">Delete</button>' +
         '    </div>' +
         '    <button type="button" v-if="allowInsert" :disabled="_value.length >= maxChildren && maxChildren > 0" v-on:click="insert(entryDefaults)">Insert</button>' +
@@ -99,6 +99,7 @@ VueForm.components['v-form-collection'] = VueForm.components['v-form-input'].ext
         }
     },
     methods: {
+        test: function () { console.log(arguments); },
         insert: function (value) {
             this._value.push(value);
         },
