@@ -29,9 +29,9 @@
         },
         template:
             '<form class="form-horizontal" v-on:submit.prevent>' +
-            '    <v-form-collection v-model="data.collection" ref="children" :min-children="2" :max-children="5" entry-defaults="AAA" :allow-insert="true" :allow-delete="true">' +
-            '        <v-form-input slot-scope="{value: value}" v-model="value" v-on:input="value = $event">{{ value }}</v-form-input>' +
-            '    </v-form-collection>' +
+            '    <VFormCollection name="collection" v-model="data.collection" ref="children" :min-children="2" :max-children="5" entry-defaults="AAA" :allow-insert="true" :allow-delete="true">' +
+            '        <VFormInput slot-scope="c" v-bind="c.options" v-model="c._value[c.index]">{{ c._value[c.index] }}</VFormInput>' +
+            '    </VFormCollection>' +
             // '    <v-form-group>' +
             // '        <v-form-label />' +
             // '        <v-form-input />' +

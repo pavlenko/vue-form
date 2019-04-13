@@ -25,8 +25,9 @@ VueForm.components['v-form-group'] = Vue.extend({
         '</div>'
 });
 
-VueForm.components['v-form-input'] = Vue.extend({
+VueForm.components.VFormInput = Vue.extend({
     props: {
+        name: String,
         value: [String, Number]
     },
     computed: {
@@ -39,7 +40,7 @@ VueForm.components['v-form-input'] = Vue.extend({
             }
         }
     },
-    template: '<div><input v-model="_value"><slot /></div>',
+    template: '<div><input :name="name" v-model="_value"><slot /></div>',
     methods: {
         validate: function () {
             //TODO must return boolean true if valid, false otherwise
@@ -48,7 +49,7 @@ VueForm.components['v-form-input'] = Vue.extend({
     }
 });
 
-VueForm.components['v-form-collection'] = VueForm.components['v-form-input'].extend({
+VueForm.components.VFormCollection = VueForm.components.VFormInput.extend({
     props: {
         value: {
             type:    Array,
@@ -72,7 +73,7 @@ VueForm.components['v-form-collection'] = VueForm.components['v-form-input'].ext
         },
         entryType: {
             type:    String,
-            default: 'v-form-input'
+            default: 'VFormInput'
         },
         entryOptions: {
             type:    Object,
@@ -86,7 +87,8 @@ VueForm.components['v-form-collection'] = VueForm.components['v-form-input'].ext
     template:
         '<div>' +
         '    <div v-for="(item, index) in _value" :key="index">' +
-        '        <slot ref="children" v-bind="entryOptions" v-bind:value="_value[index]" v-on:input="test" />' +
+        '        <!-- We need to pass both _value and index to slot for preserve reactivity -->' +
+        '        <slot ref="children" v-bind:options="getEntryOptions(index)" v-bind:_value="_value" v-bind:index="index" />' +
         '        <button type="button" v-if="allowDelete" :disabled="_value.length <= minChildren" v-on:click="remove(index)">Delete</button>' +
         '    </div>' +
         '    <button type="button" v-if="allowInsert" :disabled="_value.length >= maxChildren && maxChildren > 0" v-on:click="insert(entryDefaults)">Insert</button>' +
@@ -99,7 +101,9 @@ VueForm.components['v-form-collection'] = VueForm.components['v-form-input'].ext
         }
     },
     methods: {
-        test: function () { console.log(arguments); },
+        getEntryOptions: function (index) {
+            return Object.assign({}, this.entryOptions, {name: (this.name || this._uid) + '[' + index + ']'});
+        },
         insert: function (value) {
             this._value.push(value);
         },
