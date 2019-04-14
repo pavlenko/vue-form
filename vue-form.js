@@ -12,35 +12,45 @@ VueForm.components['v-form-label'] = Vue.extend({
 });
 
 VueForm.components['v-form-error'] = Vue.extend({
-    template: '<div />'
+    template: '<div>ERROR</div>'
 });
 
-VueForm.components['v-form-group'] = Vue.extend({
+VueForm.components.VFormGroup = Vue.extend({
     mounted: function () {
-        console.log(this.$children.filter(function (component) { return component instanceof VueForm.components['v-form-input']; }))
+        //console.log(this.$children.filter(function (component) { return component instanceof VueForm.components.VFormInput; }))
     },
     template:
         '<div>' +
         '    <slot />' +
-        '</div>'
+        '</div>',
+    methods: {
+        validate: function () {
+            var valid = true;
+
+            this.$children.forEach(function (child) {console.log(child);
+                valid = child.validate() && valid;
+            });
+
+            return valid;
+        }
+    }
 });
 
 VueForm.components.VFormInput = Vue.extend({
     props: {
+        id: String,
         name: String,
         value: [String, Number]
     },
     computed: {
+        _id: function () { return this.id || 'v-form-' + this._uid; },
+        _name: function () { return this.name || 'v-form-' + this._id; },
         _value: {
-            get: function () {
-                return this.value;
-                },
-            set: function (value) {
-                this.$emit('input', value);
-            }
+            get: function () { return this.value; },
+            set: function (value) { this.$emit('input', value); }
         }
     },
-    template: '<div><input :name="name" v-model="_value"><slot /></div>',
+    template: '<div><input :id="_id" :name="_name" v-model="_value"><slot /></div>',
     methods: {
         validate: function () {
             //TODO must return boolean true if valid, false otherwise
@@ -102,7 +112,10 @@ VueForm.components.VFormCollection = VueForm.components.VFormInput.extend({
     },
     methods: {
         getEntryOptions: function (index) {
-            return Object.assign({}, this.entryOptions, {name: (this.name || this._uid) + '[' + index + ']'});
+            return Object.assign({}, this.entryOptions, {
+                id:   this._id + '_' + index,
+                name: this._name + '[' + index + ']'
+            });
         },
         insert: function (value) {
             this._value.push(value);
