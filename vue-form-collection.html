@@ -16,6 +16,7 @@
 <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="bower_components/vue/dist/vue.js"></script>
 <script src="vue-form.js"></script>
+<script src="vue-form-bs3.js"></script>
 <script>
     Vue.use(VueForm);
 
@@ -29,8 +30,9 @@
             };
         },
         template:
-            '<form class="form-horizontal" v-on:submit.prevent>' +
-            '    <VFormCollection name="collection" v-model="data.collection" ref="children" :min-children="2" :max-children="5" entry-defaults="AAA" :allow-insert="true" :allow-delete="true">' +
+            '<VForm :value="data" v-on:submit.prevent>' +
+            '    <template slot-scope="c">' +
+            '    <VFormCollection name="collection" v-model="c.value.collection" :min-children="2" :max-children="5" entry-defaults="AAA" :allow-insert="true" :allow-delete="true">' +
             '        <VFormGroup slot-scope="c">' +
             '            <VFormInput v-bind="c.options" v-model="c.value[c.index]" />' +
             '        </VFormGroup>' +
@@ -40,8 +42,9 @@
             '        <VFormInput v-model="data.input" />' +
             '        <v-form-error />' +
             '    </VFormGroup>' +
-            '    <div class="clearfix" v-on:click="validate">{{ data }}</div>' +
-            '</form>',
+            '    <div class="clearfix" v-on:click="validate">{{ c.value }}</div>' +
+            '    </template>' +
+            '</VForm>',
         methods: {
             validate: function () {
                 var valid;
@@ -49,6 +52,8 @@
                 this.$children.forEach(function (child) {console.log(child);
                     child.validate()
                 });
+
+                return valid;
             }
         }
     });
