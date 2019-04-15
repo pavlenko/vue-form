@@ -98,7 +98,7 @@ VueForm.components.VFormCollection = VueForm.components.VFormInput.extend({
         '<div>' +
         '    <div v-for="(item, index) in _value" :key="index">' +
         '        <!-- We need to pass both _value and index to slot for preserve reactivity -->' +
-        '        <slot ref="children" v-bind:options="getEntryOptions(index)" v-bind:_value="_value" v-bind:index="index" />' +
+        '        <slot ref="children" v-bind:options="getEntryOptions(index)" v-bind:value="_value" v-bind:index="index" />' +
         '        <button type="button" v-if="allowDelete" :disabled="_value.length <= minChildren" v-on:click="remove(index)">Delete</button>' +
         '    </div>' +
         '    <button type="button" v-if="allowInsert" :disabled="_value.length >= maxChildren && maxChildren > 0" v-on:click="insert(entryDefaults)">Insert</button>' +
