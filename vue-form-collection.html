@@ -32,18 +32,17 @@
         template:
             '<VForm :value="data" v-on:submit="validate">' +
             '    <template slot-scope="c">' +
-            '    <VFormCollection name="collection" v-model="c.value.collection" :min-children="2" :max-children="5" entry-defaults="AAA" :allow-insert="true" :allow-delete="true">' +
-            '        <VFormGroup slot-scope="c">' +
-            '            <VFormInput v-bind="c.options" v-model="c.value[c.index]" />' +
+            '        <VFormCollection name="collection" v-model="c.value.collection" :min-children="2" :max-children="5" entry-defaults="AAA" :allow-insert="true" :allow-delete="true">' +
+            '            <VFormGroup slot-scope="c">' +
+            '                <VFormInput v-bind="c.options" v-model="c.value[c.index]" />' +
+            '            </VFormGroup>' +
+            '        </VFormCollection>' +
+            '        <VFormGroup>' +
+            '            <VFormInput v-model="data.input" v-form-required="\'ERROR\'" />' +
+            '            <VFormError />' +
             '        </VFormGroup>' +
-            '    </VFormCollection>' +
-            '    <VFormGroup>' +
-            // '        <v-form-label />' +
-            '        <VFormInput v-model="data.input" />' +
-            '        <v-form-error />' +
-            '    </VFormGroup>' +
-            '    <div class="clearfix" v-on:click="validate">{{ c.value }}</div>' +
-            '    <button>Send</button>' +
+            '        <div class="clearfix" v-on:click="validate">{{ c.value }}</div>' +
+            '        <button>Send</button>' +
             '    </template>' +
             '</VForm>',
         methods: {

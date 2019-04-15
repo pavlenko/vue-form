@@ -1,9 +1,22 @@
 var VueForm = {
+    directives: {},
     components: {},
     install: function (vue, options) {
         Object.keys(VueForm.components).forEach(function (key) {
             vue.component(key, VueForm.components[key]);
         });
+
+        Object.keys(VueForm.directives).forEach(function (key) {
+            vue.directive(key, VueForm.directives[key]);
+        });
+    }
+};
+
+VueForm.directives['form-required'] = {
+    update: function (el, binding, node) {
+        if (binding.value && !node.value) {
+            console.log(binding.value);
+        }
     }
 };
 
@@ -40,12 +53,11 @@ VueForm.components.VForm = Vue.extend({
     }
 });
 
-VueForm.components['v-form-label'] = Vue.extend({
-    template: '<label />'
-});
-
-VueForm.components['v-form-error'] = Vue.extend({
-    template: '<div>ERROR</div>'
+VueForm.components.VFormError = Vue.extend({
+    template: '<div>ERROR</div>',
+    mounted: function () {
+        console.log(this.inputs)
+    }
 });
 
 VueForm.components.VFormGroup = Vue.extend({
