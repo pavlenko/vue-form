@@ -27,7 +27,7 @@ VueForm.components.VFormGroup = Vue.extend({
         validate: function () {
             var valid = true;
 
-            this.$children.forEach(function (child) {console.log(child);
+            this.$children.forEach(function (child) {
                 valid = child.validate() && valid;
             });
 

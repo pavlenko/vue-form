@@ -43,10 +43,9 @@
             '    <div class="clearfix" v-on:click="validate">{{ data }}</div>' +
             '</form>',
         methods: {
-            test2: function () { console.log(arguments); },
             validate: function () {
                 var valid;
-console.log(this);
+
                 this.$children.forEach(function (child) {console.log(child);
                     child.validate()
                 });
