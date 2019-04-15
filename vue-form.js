@@ -7,6 +7,39 @@ var VueForm = {
     }
 };
 
+VueForm.components.VForm = Vue.extend({
+    props: {
+        method: {
+            type:    String,
+            default: 'POST'
+        },
+        action: {
+            type: String
+        },
+        value: {
+            type:    Object,
+            default: function () { return {}; }
+        }
+    },
+    template:
+        '<form :method="method" :action="action">' +
+        '    <slot v-bind:value="value" />' +
+        '</form>',
+    methods: {
+        validate: function () {
+            var valid = true;
+
+            this.$children.forEach(function (child) {
+                if (child instanceof VueForm.components.VFormInput) {
+                    valid = child.validate() && valid;
+                }
+            });
+
+            return valid;
+        }
+    }
+});
+
 VueForm.components['v-form-label'] = Vue.extend({
     template: '<label />'
 });
