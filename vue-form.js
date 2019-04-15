@@ -22,7 +22,7 @@ VueForm.components.VForm = Vue.extend({
         }
     },
     template:
-        '<form :method="method" :action="action">' +
+        '<form :method="method" :action="action" @submit.prevent="$emit(\'submit\')" novalidate>' +
         '    <slot v-bind:value="value" />' +
         '</form>',
     methods: {
@@ -30,7 +30,7 @@ VueForm.components.VForm = Vue.extend({
             var valid = true;
 
             this.$children.forEach(function (child) {
-                if (child instanceof VueForm.components.VFormInput) {
+                if (typeof child.validate === 'function') {
                     valid = child.validate() && valid;
                 }
             });
@@ -61,7 +61,9 @@ VueForm.components.VFormGroup = Vue.extend({
             var valid = true;
 
             this.$children.forEach(function (child) {
-                valid = child.validate() && valid;
+                if (typeof child.validate === 'function') {
+                    valid = child.validate() && valid;
+                }
             });
 
             return valid;
@@ -73,7 +75,19 @@ VueForm.components.VFormInput = Vue.extend({
     props: {
         id: String,
         name: String,
-        value: [String, Number]
+        value: [String, Number],
+        required: {
+            type:    Boolean,
+            default: true
+        },
+        disabled: {
+            type:    Boolean,
+            default: false
+        },
+        readonly: {
+            type:    Boolean,
+            default: false
+        }
     },
     computed: {
         _id: function () { return this.id || 'v-form-' + this._uid; },
@@ -83,11 +97,17 @@ VueForm.components.VFormInput = Vue.extend({
             set: function (value) { this.$emit('input', value); }
         }
     },
-    template: '<div><input :id="_id" :name="_name" v-model="_value"><slot /></div>',
+    template: '<input :id="_id" :name="_name" :required="required" :disabled="disabled" :readonly="readonly" v-model="_value" />',
     methods: {
         validate: function () {
-            //TODO must return boolean true if valid, false otherwise
-            //TODO must fill internal errors property
+            var valid = true;
+
+            if (this.required && this._value + '' === '') {
+                valid = false;
+                console.log('EMPTY');
+            }
+
+            return valid;
         }
     }
 });
@@ -159,11 +179,11 @@ VueForm.components.VFormCollection = VueForm.components.VFormInput.extend({
         validate: function () {
             var valid = true;
 
-            if (Array.isArray(this.$refs.children)) {
-                this.$refs.children.forEach(function (child) {
-                    valid = child.validate() && valid
-                });
-            }
+            this.$children.forEach(function (child) {
+                if (typeof child.validate === 'function') {
+                    valid = child.validate() && valid;
+                }
+            });
 
             return valid;
         }

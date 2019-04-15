@@ -30,7 +30,7 @@
             };
         },
         template:
-            '<VForm :value="data" v-on:submit.prevent>' +
+            '<VForm :value="data" v-on:submit="validate">' +
             '    <template slot-scope="c">' +
             '    <VFormCollection name="collection" v-model="c.value.collection" :min-children="2" :max-children="5" entry-defaults="AAA" :allow-insert="true" :allow-delete="true">' +
             '        <VFormGroup slot-scope="c">' +
@@ -43,14 +43,15 @@
             '        <v-form-error />' +
             '    </VFormGroup>' +
             '    <div class="clearfix" v-on:click="validate">{{ c.value }}</div>' +
+            '    <button>Send</button>' +
             '    </template>' +
             '</VForm>',
         methods: {
             validate: function () {
                 var valid;
 
-                this.$children.forEach(function (child) {console.log(child);
-                    child.validate()
+                this.$children.forEach(function (child) {
+                    valid = child.validate() && valid;
                 });
 
                 return valid;
