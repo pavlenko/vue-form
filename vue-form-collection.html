@@ -25,7 +25,8 @@
             return {
                 data: {
                     collection: ['CCC'],
-                    input: 'EEE'
+                    input: 'EEE',
+                    input2: {a: 'FFF', b: 'GGG'}
                 }
             };
         },
@@ -37,9 +38,16 @@
             '                <VFormInput v-bind="c.options" v-model="c.value[c.index]" />' +
             '            </VFormGroup>' +
             '        </VFormCollection>' +
-            '        <VFormGroup>' +
-            '            <VFormInput v-model="data.input" v-form-required="\'ERROR\'" />' +
+            '        <VFormGroup label="Input">' +
+            '            <VFormInput v-model="data.input" />' +
             '            <VFormError />' +
+            '        </VFormGroup>' +
+            '        <VFormGroup label="Input2">' +
+            '            <div class="form-inline">' +
+            '            <VFormInput v-model="data.input2.a" />' +
+            '            <VFormInput v-model="data.input2.b" />' +
+            '            <VFormError />' +
+            '            </div>' +
             '        </VFormGroup>' +
             '        <div class="clearfix" v-on:click="validate">{{ c.value }}</div>' +
             '        <button>Send</button>' +

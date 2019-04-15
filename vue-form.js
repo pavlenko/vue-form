@@ -61,11 +61,17 @@ VueForm.components.VFormError = Vue.extend({
 });
 
 VueForm.components.VFormGroup = Vue.extend({
+    props: {
+        label: {
+            type: [String, Boolean]
+        }
+    },
     mounted: function () {
         //console.log(this.$children.filter(function (component) { return component instanceof VueForm.components.VFormInput; }))
     },
     template:
         '<div>' +
+        '    <label>{{ label }}</label>' +
         '    <slot />' +
         '</div>',
     methods: {
