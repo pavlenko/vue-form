@@ -1,6 +1,7 @@
 var VueForm = {
     directives: {},
     components: {},
+    validators: {},
     install: function (vue, options) {
         Object.keys(VueForm.components).forEach(function (key) {
             vue.component(key, VueForm.components[key]);
@@ -207,6 +208,34 @@ VueForm.components.VFormCollection = VueForm.components.VFormInput.extend({
         }
     }
 });
+
+VueForm.validators.required = function (value) {
+    return !!String(value).trim().length;
+};
+
+VueForm.validators.email = function (value) {
+    return true;//TODO
+};
+
+VueForm.validators.phone = function (value) {
+    return true;//TODO
+};
+
+VueForm.validators.min_length = function (value, options) {
+    return true;//TODO
+};
+
+VueForm.validators.max_length = function (value, options) {
+    return true;//TODO
+};
+
+VueForm.validators.min_value = function (value, options) {
+    return true;//TODO
+};
+
+VueForm.validators.max_value = function (value, options) {
+    return true;//TODO
+};
 
 Vue.component('vue-form-group', {
     props: {
