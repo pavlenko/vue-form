@@ -35,7 +35,8 @@
             '    <template slot-scope="c">' +
             '        <VFormCollection name="collection" v-model="c.value.collection" :min-children="2" :max-children="5" entry-defaults="AAA" :allow-insert="true" :allow-delete="true">' +
             '            <VFormGroup slot-scope="c">' +
-            '                <VFormInput v-bind="c.options" v-model="c.value[c.index]" />' +
+            '                <VFormInput v-bind="c.options" v-model="c.value[c.index]" v-validate-model="c.value[c.index]" v-validate-rules="{required: true}" />' +
+            '                <div>{{c.value[c.index]}}</div>' +
             '            </VFormGroup>' +
             '        </VFormCollection>' +
             '        <VFormGroup label="Input">' +

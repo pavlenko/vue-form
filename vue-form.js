@@ -21,6 +21,36 @@ VueForm.directives['form-required'] = {
     }
 };
 
+VueForm.directives['validate-rules'] = {
+    bind: function (el, binding) {
+        el.$validators = {};
+
+        if (typeof binding.value === 'object') {
+            Object.keys(binding.value).forEach(function (key) {
+                if (typeof VueForm.validators[key] === 'function') {
+                    el.$validators[key] = VueForm.validators[key](binding.value[key]);
+                }
+            });
+        }
+    }
+};
+
+VueForm.directives['validate-model'] = {
+    update: function (el, binding) {
+        el.$validators = el.$validators || {};
+
+        if (typeof binding.value === 'object') {
+            Object.keys(el.$validators).forEach(function (key) {
+                if (typeof el.$validators[key] === 'function') {
+                    binding.value.error[key] = !el.$validators[key](binding.value.value);
+                }
+            });
+        }
+
+        console.log(binding.value.error);
+    }
+};
+
 VueForm.components.VForm = Vue.extend({
     props: {
         method: {
@@ -209,8 +239,10 @@ VueForm.components.VFormCollection = VueForm.components.VFormInput.extend({
     }
 });
 
-VueForm.validators.required = function (value) {
-    return !!String(value).trim().length;
+VueForm.validators.required = function () {
+    return function (value) {
+        return !!String(value).trim().length;
+    };
 };
 
 VueForm.validators.email = function (value) {
