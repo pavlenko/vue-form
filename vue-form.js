@@ -72,7 +72,7 @@ VueForm.components.VFormGroup = Vue.extend({
     },
     template:
         '<div>' +
-        '    <label>{{ label }}</label>' +
+        '    <label>{{ label || \'\' }}</label>' +
         '    <slot />' +
         '</div>',
     methods: {
@@ -92,9 +92,16 @@ VueForm.components.VFormGroup = Vue.extend({
 
 VueForm.components.VFormInput = Vue.extend({
     props: {
-        id: String,
-        name: String,
-        value: [String, Number],
+        id: {
+            type: String
+        },
+        name: {
+            type: String
+        },
+        value: {
+            type:    [String, Object],
+            default: function () { return {value: null, error: {}}; }
+        },
         required: {
             type:    Boolean,
             default: true
@@ -116,17 +123,10 @@ VueForm.components.VFormInput = Vue.extend({
             set: function (value) { this.$emit('input', value); }
         }
     },
-    template: '<input :id="_id" :name="_name" :required="required" :disabled="disabled" :readonly="readonly" v-model="_value" />',
-    methods: {
-        validate: function () {
-            var valid = true;
-
-            if (this.required && this._value + '' === '') {
-                valid = false;
-                console.log('EMPTY');
-            }
-
-            return valid;
+    template: '<input :id="_id" :name="_name" :disabled="disabled" :readonly="readonly" v-model="_value.value" />',
+    mounted: function () {
+        if (typeof this._value == 'string') {
+            this._value = {value: this._value, error: {}};
         }
     }
 });
