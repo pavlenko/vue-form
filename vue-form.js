@@ -148,15 +148,28 @@ VueForm.components.VFormInput = Vue.extend({
     computed: {
         _id: function () { return this.id || 'v-form-' + this._uid; },
         _name: function () { return this.name || 'v-form-' + this._id; },
-        _value: {
+        __data: {
             get: function () { return this.value; },
             set: function (value) { this.$emit('input', value); }
+        },
+        _value: {
+            get: function () { return this.__data.value; },
+            set: function (value) { this.__data.value = value; }
         }
     },
-    template: '<input :id="_id" :name="_name" :disabled="disabled" :readonly="readonly" v-model="_value.value" />',
+    template: '<input :id="_id" :name="_name" :disabled="disabled" :readonly="readonly" v-model="_value" />',
     mounted: function () {
-        if (typeof this._value == 'string') {
-            this._value = {value: this._value, error: {}};
+        if (typeof this.__data !== 'object') {
+            this.__data = {value: this.__data, error: {}};
+        }
+    },
+    watch: {
+        _value: {
+            handler: function (newValue, oldValue) {
+                if (newValue !== oldValue) {
+                    this.__data.error.required = !!String(newValue).trim().length;
+                }
+            }
         }
     }
 });
