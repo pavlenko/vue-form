@@ -15,57 +15,24 @@
 <script src="bower_components/jquery/dist/jquery.min.js"></script>
 <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="bower_components/vue/dist/vue.js"></script>
+<script src="v-form.js"></script>
+<script src="v-form-input.js"></script>
 <script>
-    Vue.component('VFormInput', {
-        props: {
-            id: {
-                type: String
-            },
-            name: {
-                type: String
-            },
-            value: {
-                type:    [String, Number],
-                default: null
-            },
-            error: {
-                type:    Object,
-                default: function () { return {}; }
-            },
-            disabled: {
-                type:    Boolean,
-                default: false
-            },
-            readonly: {
-                type:    Boolean,
-                default: false
-            }
-        },
-        computed: {
-            _id: function () { return this.id || 'v-form-' + this._uid; },
-            _name: function () { return this.name || 'v-form-' + this._id; },
-            _value: {
-                get: function () { return this.value; },
-                set: function (value) {
-                    //this.error.required = !!String(value).trim().length;
-                    this.$emit('update:error', !!String(value).trim().length);
-                    this.$emit('input', value);
-                    //console.log(this.error);
-                }
-            }
-        },
-        template: '<input :id="_id" :name="_name" v-model="_value" />',
-        mounted: function () {
+    Vue.use(VForm);
 
-        },
-        watch: {
-            _value_: {
-                handler: function (newValue, oldValue) {
-                    if (newValue !== oldValue) {
-                        this.error.required = !!String(newValue).trim().length;
-                    }
-                }
-            }
+    Vue.directive('test', function (el, binding, vNode) {
+        //TODO set rules in directive only as config
+        vNode.componentInstance.$validate = {required: true};
+    });
+
+    Vue.mixin({
+        //TODO in mixin check component instance of and apply validation by rules, maybe add watcher instead of listener
+        $validate: {},
+        mounted: function () {
+            console.log(this);
+            this.$on('input', function (newValue) {
+                this.$emit('update:error', {required: !!String(newValue).trim().length});
+            })
         }
     });
 
@@ -78,7 +45,7 @@
         template:
             '<div>' +
             //'<VFormInput v-model="value.input" v-bind:error="error.input" @update:error="error.input = $event" />' +
-            '<VFormInput v-model="value.input" v-bind:error.sync="error.input" />' +
+            '<VFormInput v-model="value.input" v-bind:error.sync="error.input" v-test />' +
             '{{value}}{{error}}' +
             '</div>'
     });
