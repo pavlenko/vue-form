@@ -2,6 +2,17 @@ var VForm = {
     directives: {},
     components: {},
     validators: {},
+    $validator: function (value, rules) {
+        var error = {};
+
+        Object.keys(rules).forEach(function (name) {
+            if (typeof VForm.validators[name] === 'function') {
+                error[name] = VForm.validators[name](value, rules[name]);
+            }
+        });
+
+        return error;
+    },
     install: function (vue, options) {
         Object.keys(VForm.components).forEach(function (key) {
             vue.component(key, VForm.components[key]);
