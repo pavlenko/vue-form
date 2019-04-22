@@ -20,6 +20,10 @@
 <script src="v-form-checkbox.js"></script>
 <script src="v-form-radio.js"></script>
 <script src="v-form-choice.js"></script>
+<script src="v-form-date.js"></script>
+<script src="v-form-time.js"></script>
+<script src="v-form-number.js"></script>
+<script src="v-form-range.js"></script>
 <script src="v-form-validate.js"></script>
 <script>
     Vue.use(VForm);
@@ -37,13 +41,17 @@
         },
         template:
             '<div>' +
-            '<VFormCheckbox v-model="value.cb" v-bind:error.sync="error.cb" v-validate-rules="{required: true}" />' +
-            '<VFormRadio v-model="value.r" name="a" check="0" v-bind:error.sync="error.r" v-validate-rules="{required: true}" />' +
-            '<VFormRadio v-model="value.r" name="a" check="1" v-bind:error.sync="error.r" v-validate-rules="{required: true}" />' +
-            '<VFormChoice v-model="value.c1" v-bind:error.sync="error.c1" :choices="choices" v-validate-rules="{required: true}" />' +
-            '<VFormChoice v-model="value.c2" v-bind:error.sync="error.c2" :choices="choices" :expanded="true" :multiple="false" v-validate-rules="{required: true}" />' +
-            '<VFormChoice v-model="value.c3" v-bind:error.sync="error.c3" :choices="choices" :expanded="true" :multiple="true" v-validate-rules="{required: true}" />' +
-            '<VFormInput v-model="value.input" v-bind:error.sync="error.input" v-validate-rules="{required: true}" />' +
+            '<div><VFormCheckbox v-model="value.cb" v-bind:error.sync="error.cb" v-validate-rules="{required: true}" /></div>' +
+            '<div><VFormRadio v-model="value.r" name="a" check="0" v-bind:error.sync="error.r" v-validate-rules="{required: true}" /></div>' +
+            '<div><VFormRadio v-model="value.r" name="a" check="1" v-bind:error.sync="error.r" v-validate-rules="{required: true}" /></div>' +
+            '<div><VFormChoice v-model="value.c1" v-bind:error.sync="error.c1" :choices="choices" v-validate-rules="{required: true}" /></div>' +
+            '<div><VFormChoice v-model="value.c2" v-bind:error.sync="error.c2" :choices="choices" :expanded="true" :multiple="false" v-validate-rules="{required: true}" /></div>' +
+            '<div><VFormChoice v-model="value.c3" v-bind:error.sync="error.c3" :choices="choices" :expanded="true" :multiple="true" v-validate-rules="{required: true}" /></div>' +
+            '<div><VFormDate v-model="value.date" v-bind:error.sync="error.date" v-validate-rules="{required: true}" /></div>' +
+            '<div><VFormTime v-model="value.time" v-bind:error.sync="error.time" v-validate-rules="{required: true}" /></div>' +
+            '<div><VFormInput v-model="value.input" v-bind:error.sync="error.input" v-validate-rules="{required: true}" /></div>' +
+            '<div><VFormNumber v-model="value.number" v-bind:error.sync="error.number" v-validate-rules="{required: true}" /></div>' +
+            '<div><VFormRange v-model="value.range" v-bind:error.sync="error.range" v-validate-rules="{required: true}" /></div>' +
             '{{value}}{{error}}' +
             '</div>'
     });

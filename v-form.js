@@ -18,7 +18,7 @@ var VForm = {
         });
 
         vue.directive('validate-rules', function (el, binding, vNode) {
-            if (typeof binding.value === 'object') {
+            if (typeof binding.value === 'object' && vNode.componentInstance) {
                 vNode.componentInstance.validators = binding.value;
             }
         });
