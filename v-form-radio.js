@@ -1,5 +1,8 @@
 VForm.components.VFormRadio = VForm.components.VFormInput.extend({
     props: {
+        label: {
+            type: String
+        },
         value: {
             type: [String, Number, Boolean]
         },
@@ -8,5 +11,8 @@ VForm.components.VFormRadio = VForm.components.VFormInput.extend({
             default: true
         }
     },
-    template: '<input ref="field" type="radio" :id="_id" :name="_name" v-model="_value" :value="check">'
+    template:
+        '<label>' +
+        '    <input ref="field" type="radio" :id="_id" :name="_name" v-model="_value" :value="check"> {{ label }}' +
+        '</label>'
 });

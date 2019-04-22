@@ -31,5 +31,5 @@ VForm.components.VFormInput = Vue.extend({
             set: function (value) { this.$emit('input', value); }
         }
     },
-    template: '<input :id="_id" :name="_name" v-model="_value" />'
+    template: '<input ref="field" :id="_id" :name="_name" v-model="_value" />'
 });

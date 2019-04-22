@@ -5,5 +5,5 @@ VForm.components.VFormDate = VForm.components.VFormInput.extend({
             default: 1
         }
     },
-    template: '<input type="date" :id="_id" :name="_name" v-model="_value" :step="step" />'
+    template: '<input ref="field" type="date" :id="_id" :name="_name" v-model="_value" :step="step" />'
 });
