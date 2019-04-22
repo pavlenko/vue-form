@@ -1,46 +1,62 @@
 VForm.components.VFormDuration = VForm.components.VFormInput.extend({
+    props: {
+        displayDays: {
+            type:    Boolean,
+            default: true
+        },
+        displaySeconds: {
+            type:    Boolean,
+            default: false
+        }
+    },
     computed: {
         days: {
             get: function () { return this.decode(this._value).days; },
-            set: function () { this._value = this.encode(); }
+            set: function (value) { this._value = this.encode({days: value, hours: this.hours, minutes: this.minutes, seconds: this.seconds}); }
         },
         hours: {
             get: function () { return this.decode(this._value).hours; },
-            set: function () { this._value = this.encode(); }
+            set: function (value) { this._value = this.encode({days: this.days, hours: value, minutes: this.minutes, seconds: this.seconds}); }
         },
         minutes: {
             get: function () { return this.decode(this._value).minutes; },
-            set: function () { this._value = this.encode(); }
+            set: function (value) { this._value = this.encode({days: this.days, hours: this.hours, minutes: value, seconds: this.seconds}); }
         },
         seconds: {
             get: function () { return this.decode(this._value).seconds; },
-            set: function () { this._value = this.encode(); }
+            set: function (value) { this._value = this.encode({days: this.days, hours: this.hours, minutes: this.minutes, seconds: value}); }
         }
     },
     template:
-        '<div>' +
-        '    <VFormNumber :name="_name" v-model="days" />' +
-        '    <VFormNumber :name="_name" v-model="hours" />' +
-        '    <VFormNumber :name="_name" v-model="minutes" />' +
-        '    <VFormNumber :name="_name" v-model="seconds" />' +
-        '   {{_value}}' +
-        '</div>',
+        '<table>' +
+        '    <tr>' +
+        '        <td v-if="displayDays"><VFormNumber :name="_name" v-model="days" /></td>' +
+        '        <td><VFormNumber :name="_name" v-model="hours" /></td>' +
+        '        <td><VFormNumber :name="_name" v-model="minutes" /></td>' +
+        '        <td v-if="displaySeconds"><VFormNumber :name="_name" v-model="seconds" /></td>' +
+        '    </tr>' +
+        '    <tr>' +
+        '        <td v-if="displayDays">Days</td>' +
+        '        <td>Hours</td>' +
+        '        <td>Minutes</td>' +
+        '        <td v-if="displaySeconds">Seconds</td>' +
+        '    </tr>' +
+        '</table>',
     methods: {
-        decode: function () {
-            var value = this._value;
-            var days = value / 86400;
+        decode: function (value) {
+            var days = Math.floor(value / 86400);
 
             value = value % 86400;
 
-            var hours = value / 3600;
+            var hours = Math.floor(value / 3600);
 
             value = value % 3600;
 
-            var minutes = value / 60;
+            var minutes = Math.floor(value / 60);
 
             value = value % 3600;
 
-            var seconds = value;
+            var seconds = Math.floor(value);
 
             return {
                 days: days,
@@ -49,11 +65,11 @@ VForm.components.VFormDuration = VForm.components.VFormInput.extend({
                 seconds: seconds
             }
         },
-        encode: function () {
-            return ((this.days || 0) * 86400)
-                + ((this.hours || 0) * 3600)
-                + ((this.minutes || 0) * 60)
-                + (this.seconds || 0);
+        encode: function (value) {
+            return ((value.days || 0) * 86400)
+                + ((value.hours || 0) * 3600)
+                + ((value.minutes || 0) * 60)
+                + (value.seconds || 0);
         }
     }
 });
