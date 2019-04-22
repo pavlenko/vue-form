@@ -1,5 +1,9 @@
 VForm.validators.required = function (value) {
-    return !!String(value).trim().length;
+    if (typeof value === 'string') {
+        return !!String(value).trim().length;
+    } else {
+        return !!value;
+    }
 };
 
 VForm.validators.email = function (value) {

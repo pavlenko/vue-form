@@ -25,7 +25,7 @@ VForm.components.VFormInput = Vue.extend({
     },
     computed: {
         _id: function () { return this.id || 'v-form-' + this._uid; },
-        _name: function () { return this.name || 'v-form-' + this._id; },
+        _name: function () { return this.name || 'v-form-' + this._uid; },
         _value: {
             get: function () { return this.value; },
             set: function (value) { this.$emit('input', value); }
