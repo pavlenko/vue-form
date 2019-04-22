@@ -17,29 +17,9 @@
 <script src="bower_components/vue/dist/vue.js"></script>
 <script src="v-form.js"></script>
 <script src="v-form-input.js"></script>
+<script src="v-form-validate.js"></script>
 <script>
     Vue.use(VForm);
-
-    Vue.directive('test', function (el, binding, vNode) {
-        //TODO set rules in directive only as config
-        vNode.componentInstance.$validate = {required: true};
-    });
-
-    Vue.mixin({
-        //TODO in mixin check component instance of and apply validation by rules, maybe add watcher instead of listener
-        //$validate: {},
-        /*mounted: function () {
-            console.log(this);
-            this.$on('input', function (newValue) {
-                this.$emit('update:error', {required: !!String(newValue).trim().length});
-            })
-        }*/
-        watch: {
-            _value: function (newValue, oldValue) {
-                this.$emit('update:error', {required: !!String(newValue).trim().length});
-            }
-        }
-    });
 
     new Vue({
         el: '#app',
@@ -50,7 +30,7 @@
         template:
             '<div>' +
             //'<VFormInput v-model="value.input" v-bind:error="error.input" @update:error="error.input = $event" />' +
-            '<VFormInput v-model="value.input" v-bind:error.sync="error.input" v-test />' +
+            '<VFormInput v-model="value.input" v-bind:error.sync="error.input" v-validate-rules="{required: true}" />' +
             '{{value}}{{error}}' +
             '</div>'
     });

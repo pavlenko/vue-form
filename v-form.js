@@ -1,5 +1,4 @@
 var VForm = {
-    directives: {},
     components: {},
     validators: {},
     $validator: function (value, rules) {
@@ -18,23 +17,17 @@ var VForm = {
             vue.component(key, VForm.components[key]);
         });
 
-        Object.keys(VForm.directives).forEach(function (key) {
-            vue.directive(key, VForm.directives[key]);
+        vue.directive('validate-rules', function (el, binding, vNode) {
+            if (typeof binding.value === 'object') {
+                vNode.componentInstance.validators = binding.value;
+            }
         });
 
         vue.mixin({
-            validators: {},//TODO set from directive
-            $validator: VForm.$validator,
-            props: {
-                error: {
-                    type:    Object,
-                    default: function () { return {}; }
-                }
-            },
             watch: {
                 _value: function (newValue, oldValue) {
-                    if (this.$validator && newValue !== oldValue) {
-                        this.validator(newValue, this.validators);
+                    if (typeof this.validators === 'object' && newValue !== oldValue) {
+                        this.$emit('update:error', VForm.$validator(newValue, this.validators));
                     }
                 }
             }

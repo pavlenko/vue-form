@@ -31,16 +31,5 @@ VForm.components.VFormInput = Vue.extend({
             set: function (value) { this.$emit('input', value); }
         }
     },
-    template: '<input :id="_id" :name="_name" v-model="_value" />',
-    mounted: function () {},
-    watch: {
-        _value: {
-            handler: function (newValue, oldValue) {
-                if (newValue !== oldValue) {
-                    //this.$emit('update:error', {required: !!String(newValue).trim().length});
-                    //this.error.required = !!String(newValue).trim().length;
-                }
-            }
-        }
-    }
+    template: '<input :id="_id" :name="_name" v-model="_value" />'
 });
