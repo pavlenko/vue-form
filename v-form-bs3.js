@@ -64,8 +64,17 @@ VForm.components.VFormDuration = VForm.components.VFormDuration.extend({
 });
 
 VForm.components.VFormCheckbox = VForm.components.VFormCheckbox.extend({
+    props: {
+        inline: {
+            type:    Boolean,
+            default: false
+        }
+    },
     template:
-        '<div class="checkbox">' +
+        '<label v-if="inline" class="checkbox-inline">' +
+        '    <input ref="field" type="checkbox" :id="_id" :name="_name" v-model="_value" :value="check"> {{ label }}' +
+        '</label>' +
+        '<div v-else class="checkbox">' +
         '    <label>' +
         '        <input ref="field" type="checkbox" :id="_id" :name="_name" v-model="_value" :value="check"> {{ label }}' +
         '    </label>' +
@@ -73,8 +82,17 @@ VForm.components.VFormCheckbox = VForm.components.VFormCheckbox.extend({
 });
 
 VForm.components.VFormRadio = VForm.components.VFormRadio.extend({
+    props: {
+        inline: {
+            type:    Boolean,
+            default: false
+        }
+    },
     template:
-        '<div class="radio">' +
+        '<label v-if="inline" class="radio-inline">' +
+        '    <input ref="field" type="radio" :id="_id" :name="_name" v-model="_value" :value="check"> {{ label }}' +
+        '</label>' +
+        '<div v-else class="radio">' +
         '    <label>' +
         '        <input ref="field" type="radio" :id="_id" :name="_name" v-model="_value" :value="check"> {{ label }}' +
         '    </label>' +
@@ -87,9 +105,9 @@ VForm.components.VFormChoice = VForm.components.VFormChoice.extend({
         '    <option v-for="choice in _choices" v-bind:value="choice.id">{{ choice.label }}</option>' +
         '</select>' +
         '<div v-else-if="!multiple">' +
-        '    <VFormRadio v-for="choice in _choices" ref="field" :key="choice.id" :name="_name" :label="choice.label" v-bind:value="choice.id" v-model="_value" :check="choice.id" />' +
+        '    <VFormRadio v-for="choice in _choices" ref="field" :inline="true" :key="choice.id" :name="_name" :label="choice.label" v-bind:value="choice.id" v-model="_value" :check="choice.id" />' +
         '</div>' +
         '<div v-else>' +
-        '    <VFormCheckbox v-for="choice in _choices" ref="field" :key="choice.id" :name="_name" :label="choice.label" v-model="selected[choice.id]" :check="choice.id" />' +
+        '    <VFormCheckbox v-for="choice in _choices" ref="field" :inline="true" :key="choice.id" :name="_name" :label="choice.label" v-model="selected[choice.id]" :check="choice.id" />' +
         '</div>'
 });
