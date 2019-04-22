@@ -19,6 +19,7 @@
 <script src="v-form-input.js"></script>
 <script src="v-form-checkbox.js"></script>
 <script src="v-form-radio.js"></script>
+<script src="v-form-choice.js"></script>
 <script src="v-form-validate.js"></script>
 <script>
     Vue.use(VForm);
@@ -26,6 +27,11 @@
     new Vue({
         el: '#app',
         data: {
+            choices: {
+                'A': 'A',
+                'B': 'B',
+                'C': 'C'
+            },
             value: {},
             error: {}
         },
@@ -34,6 +40,9 @@
             '<VFormCheckbox v-model="value.cb" v-bind:error.sync="error.cb" v-validate-rules="{required: true}" />' +
             '<VFormRadio v-model="value.r" name="a" check="0" v-bind:error.sync="error.r" v-validate-rules="{required: true}" />' +
             '<VFormRadio v-model="value.r" name="a" check="1" v-bind:error.sync="error.r" v-validate-rules="{required: true}" />' +
+            '<VFormChoice v-model="value.c1" v-bind:error.sync="error.c1" :choices="choices" v-validate-rules="{required: true}" />' +
+            '<VFormChoice v-model="value.c2" v-bind:error.sync="error.c2" :choices="choices" :expanded="true" :multiple="false" v-validate-rules="{required: true}" />' +
+            '<VFormChoice v-model="value.c3" v-bind:error.sync="error.c3" :choices="choices" :expanded="true" :multiple="true" v-validate-rules="{required: true}" />' +
             '<VFormInput v-model="value.input" v-bind:error.sync="error.input" v-validate-rules="{required: true}" />' +
             '{{value}}{{error}}' +
             '</div>'
