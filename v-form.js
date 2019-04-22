@@ -21,6 +21,24 @@ var VForm = {
         Object.keys(VForm.directives).forEach(function (key) {
             vue.directive(key, VForm.directives[key]);
         });
+
+        vue.mixin({
+            validators: {},//TODO set from directive
+            $validator: VForm.$validator,
+            props: {
+                error: {
+                    type:    Object,
+                    default: function () { return {}; }
+                }
+            },
+            watch: {
+                _value: function (newValue, oldValue) {
+                    if (this.$validator && newValue !== oldValue) {
+                        this.validator(newValue, this.validators);
+                    }
+                }
+            }
+        });
     },
     deepGet: function (object, path, create) {
         var parts = path.split('.'), current = object, index = 0;
