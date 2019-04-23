@@ -1,3 +1,11 @@
+VForm.components.VFormGroup = VForm.components.VFormGroup.extend({
+    template:
+        '<div :class="{\'form-group\': true, \'has-success\': _length == 0, \'has-error\': _length > 0}">' +
+        '    <label class="control-label" v-html="label" />' +
+        '    <slot />' +
+        '</div>'
+});
+
 VForm.components.VFormInput = VForm.components.VFormInput.extend({
     template: '<input class="form-control" :id="_id" :name="_name" :type="type" v-model="_value" />'
 });

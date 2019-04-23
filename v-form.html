@@ -18,6 +18,7 @@
 <script src="bower_components/seiyria-bootstrap-slider/dist/bootstrap-slider.js"></script>
 <script src="bower_components/vue/dist/vue.js"></script>
 <script src="v-form.js"></script>
+<script src="v-form-group.js"></script>
 <script src="v-form-input.js"></script>
 <script src="v-form-checkbox.js"></script>
 <script src="v-form-radio.js"></script>
@@ -61,6 +62,12 @@
             '<div><VFormRange v-model="value.range" v-bind:error.sync="error.range" v-validate-rules="{required: true}" /></div>' +
             '<div><VFormDuration v-model="value.duration" v-bind:error.sync="error.duration" v-validate-rules="{required: true}" /></div>' +
             '<div><VFormTextarea v-model="value.text" v-bind:error.sync="error.text" v-validate-rules="{required: true}" /></div>' +
+            '<VFormGroup v-bind:error.sync="error.input" label="Input<br>a">' +
+            '    <VFormInput v-model="value.input" v-bind:error.sync="error.input" v-validate-rules="{required: true}" />' +
+            '    <div class="help-block">' +
+            '        <div v-if="error.input && !error.input.required">Field is required</div>' +
+            '    </div>' +
+            '</VFormGroup>' +
             '{{value}}{{error}}' +
             '</div>'
     });
