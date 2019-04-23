@@ -1,23 +1,17 @@
 VForm.components.VFormInput = VForm.components.VFormInput.extend({
-    template: '<input class="form-control" :id="_id" :name="_name" v-model="_value" />'
+    template: '<input class="form-control" :id="_id" :name="_name" :type="type" v-model="_value" />'
 });
 
 VForm.components.VFormNumber = VForm.components.VFormNumber.extend({
-    props: {
-        displayButtons: {
-            type:    Boolean,
-            default: true
-        }
-    },
     template:
         '<div class="input-group">' +
-        '    <span class="input-group-btn" v-if="displayButtons">' +
+        '    <span class="input-group-btn">' +
         '        <button :disabled="null !== min && min >= _value" class="btn btn-default" type="button" v-on:click="decrement()">' +
         '            <i class="fa fa-fw fa-minus"></i>' +
         '        </button>' +
         '    </span>' +
         '    <input class="form-control" ref="field" type="number" :id="_id" :name="_name" v-model="_value" :step="step" />' +
-        '    <span class="input-group-btn" v-if="displayButtons">' +
+        '    <span class="input-group-btn">' +
         '        <button :disabled="null !== min && min >= _value" class="btn btn-default" type="button" v-on:click="increment()">' +
         '            <i class="fa fa-fw fa-plus"></i>' +
         '        </button>' +
@@ -43,24 +37,6 @@ VForm.components.VFormTime = VForm.components.VFormTime.extend({
         '        <i class="fa fa-fw fa-clock-o"></i>' +
         '    </span>' +
         '</div>'
-});
-
-VForm.components.VFormDuration = VForm.components.VFormDuration.extend({
-    template:
-        '<table>' +
-        '    <tr>' +
-        '        <td v-if="displayDays"><VFormNumber :name="_name" v-model="days" :display-buttons="false" /></td>' +
-        '        <td><VFormNumber :name="_name" v-model="hours"  :display-buttons="false"/></td>' +
-        '        <td><VFormNumber :name="_name" v-model="minutes"  :display-buttons="false"/></td>' +
-        '        <td v-if="displaySeconds"><VFormNumber :name="_name" v-model="seconds"  :display-buttons="false"/></td>' +
-        '    </tr>' +
-        '    <tr>' +
-        '        <td v-if="displayDays">Days</td>' +
-        '        <td>Hours</td>' +
-        '        <td>Minutes</td>' +
-        '        <td v-if="displaySeconds">Seconds</td>' +
-        '    </tr>' +
-        '</table>'
 });
 
 VForm.components.VFormCheckbox = VForm.components.VFormCheckbox.extend({

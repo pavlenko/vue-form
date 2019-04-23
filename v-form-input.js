@@ -6,6 +6,9 @@ VForm.components.VFormInput = Vue.extend({
         name: {
             type: String
         },
+        type: {
+            type: String
+        },
         value: {
             type:    [String, Number],
             default: null
@@ -31,5 +34,5 @@ VForm.components.VFormInput = Vue.extend({
             set: function (value) { this.$emit('input', value); }
         }
     },
-    template: '<input ref="field" :id="_id" :name="_name" v-model="_value" />'
+    template: '<input ref="field" :id="_id" :name="_name" :type="type" v-model="_value" />'
 });

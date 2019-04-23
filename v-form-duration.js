@@ -30,10 +30,10 @@ VForm.components.VFormDuration = VForm.components.VFormInput.extend({
     template:
         '<table>' +
         '    <tr>' +
-        '        <td v-if="displayDays"><VFormNumber :name="_name" v-model="days" /></td>' +
-        '        <td><VFormNumber :name="_name" v-model="hours" /></td>' +
-        '        <td><VFormNumber :name="_name" v-model="minutes" /></td>' +
-        '        <td v-if="displaySeconds"><VFormNumber :name="_name" v-model="seconds" /></td>' +
+        '        <td v-if="displayDays"><VFormInput type="number" :name="_name" v-model="days" /></td>' +
+        '        <td><VFormInput type="number" :name="_name" v-model="hours" /></td>' +
+        '        <td><VFormInput type="number" :name="_name" v-model="minutes" /></td>' +
+        '        <td v-if="displaySeconds"><VFormInput type="number" :name="_name" v-model="seconds" /></td>' +
         '    </tr>' +
         '    <tr>' +
         '        <td v-if="displayDays">Days</td>' +
