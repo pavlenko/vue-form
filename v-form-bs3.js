@@ -100,14 +100,13 @@ VForm.components.VFormRange = VForm.components.VFormRange.extend({
         },
         handle: {
             type:    String,
-            default: 'round'
+            default: 'square'
         }
     },
     mounted: function () {
         this.$refs.field.style.width = '100%';
 
-        //TODO display value in handle block
-        new Slider(this.$refs.field, {
+        this.slider = new Slider(this.$refs.field, {
             range:   this.range,
             step:    this.step,
             min:     this.min,
@@ -118,6 +117,31 @@ VForm.components.VFormRange = VForm.components.VFormRange.extend({
         }).on('change', function (data) {
             this.$emit('input', data.newValue);
         }.bind(this));
+
+        if (this.tooltip === 'hide') {
+            var updateStyle = function (el) {
+                el.style.color      = '#fff';
+                el.style.textAlign  = 'center';
+                el.style.fontSize   = '12px';
+                el.style.paddingTop = '2px';
+            };
+
+            var updateValue = function (data) {
+                if (Array.isArray(data.newValue)) {
+                    updateStyle(this.slider.handle1);
+                    updateStyle(this.slider.handle2);
+
+                    this.slider.handle1.innerHTML = data.newValue[0];
+                    this.slider.handle2.innerHTML = data.newValue[1];
+                } else {
+                    updateStyle(this.slider.handle1);
+                    this.slider.handle1.innerHTML = data.newValue;
+                }
+            }.bind(this);
+
+            this.slider.on('change', updateValue);
+            updateValue({newValue: this.slider.getValue()});
+        }
     }
 });
 
