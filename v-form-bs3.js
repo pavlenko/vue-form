@@ -28,23 +28,87 @@ VForm.components.VFormNumber = VForm.components.VFormNumber.extend({
 });
 
 VForm.components.VFormDate = VForm.components.VFormDate.extend({
+    props: {
+        inline: {
+            type:    Boolean,
+            default: false
+        },
+        formatValue: {
+            type:    String,
+            default: 'YYYY-MM-DD'
+        },
+        formatView: {
+            type:    String,
+            default: 'L'
+        }
+    },
     template:
         '<div class="input-group">' +
-        '    <input class="form-control" ref="field" type="date" :id="_id" :name="_name" v-model="_value" :step="step" />' +
+        '    <input ref="picker" class="form-control" />' +
+        '    <input ref="field" type="hidden" :id="_id" :name="_name" v-model="_value">' +
         '    <span class="input-group-addon">' +
         '        <i class="fa fa-fw fa-calendar"></i>' +
         '    </span>' +
-        '</div>'
+        '</div>',
+    mounted: function () {
+        $(this.$refs.picker).datetimepicker({
+            format:  this.formatView,
+            date:    moment(this.value, this.formatValue),
+            inline:  this.inline,
+            minDate: this.min,
+            maxDate: this.max
+        }).on('dp.change', function (event) {
+            var time = event.date ? event.date.format(this.formatValue) : null;
+
+            this.$refs.field.value = time;
+            this.$emit('input', time);
+        }.bind(this))
+    },
+    watch: {
+        minDate: function (value) {
+            $(this.$refs.picker).data("DateTimePicker").minDate(value ? moment(value, this.formatValue) : false);
+        },
+        maxDate: function (value) {
+            $(this.$refs.picker).data("DateTimePicker").maxDate(value ? moment(value, this.formatValue) : false);
+        }
+    }
 });
 
 VForm.components.VFormTime = VForm.components.VFormTime.extend({
+    props: {
+        inline: {
+            type:    Boolean,
+            default: false
+        },
+        formatValue: {
+            type:    String,
+            default: 'HH:mm:ss'
+        },
+        formatView: {
+            type:    String,
+            default: 'LTS'
+        }
+    },
     template:
         '<div class="input-group">' +
-        '    <input class="form-control" ref="field" type="time" :id="_id" :name="_name" v-model="_value" :step="step" />' +
+        '    <input ref="picker" class="form-control" />' +
+        '    <input ref="field" type="hidden" :id="_id" :name="_name" v-model="_value">' +
         '    <span class="input-group-addon">' +
         '        <i class="fa fa-fw fa-clock-o"></i>' +
         '    </span>' +
-        '</div>'
+        '</div>',
+    mounted: function () {
+        $(this.$refs.picker).datetimepicker({
+            format: this.formatView,
+            date:   moment(this.value, this.formatValue),
+            inline: this.inline
+        }).on('dp.change', function (event) {
+            var time = event.date.format(this.formatValue);
+
+            this.$refs.field.value = time;
+            this.$emit('input', time);
+        }.bind(this))
+    }
 });
 
 VForm.components.VFormCheckbox = VForm.components.VFormCheckbox.extend({
