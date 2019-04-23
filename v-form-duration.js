@@ -9,31 +9,23 @@ VForm.components.VFormDuration = VForm.components.VFormInput.extend({
             default: false
         }
     },
-    computed: {
-        days: {
-            get: function () { return this.decode(this._value).days; },
-            set: function (value) { this._value = this.encode({days: value, hours: this.hours, minutes: this.minutes, seconds: this.seconds}); }
-        },
-        hours: {
-            get: function () { return this.decode(this._value).hours; },
-            set: function (value) { this._value = this.encode({days: this.days, hours: value, minutes: this.minutes, seconds: this.seconds}); }
-        },
-        minutes: {
-            get: function () { return this.decode(this._value).minutes; },
-            set: function (value) { this._value = this.encode({days: this.days, hours: this.hours, minutes: value, seconds: this.seconds}); }
-        },
-        seconds: {
-            get: function () { return this.decode(this._value).seconds; },
-            set: function (value) { this._value = this.encode({days: this.days, hours: this.hours, minutes: this.minutes, seconds: value}); }
+    data: function () {
+        return {
+            duration: {
+                days:    null,
+                hours:   null,
+                minutes: null,
+                seconds: null
+            }
         }
     },
     template:
         '<table>' +
         '    <tr>' +
-        '        <td v-if="displayDays"><VFormInput type="number" :name="_name" v-model="days" /></td>' +
-        '        <td><VFormInput type="number" :name="_name" v-model="hours" /></td>' +
-        '        <td><VFormInput type="number" :name="_name" v-model="minutes" /></td>' +
-        '        <td v-if="displaySeconds"><VFormInput type="number" :name="_name" v-model="seconds" /></td>' +
+        '        <td v-if="displayDays"><VFormInput type="number" :name="_name" v-model="duration.days" /></td>' +
+        '        <td><VFormInput type="number" :name="_name" v-model="duration.hours" /></td>' +
+        '        <td><VFormInput type="number" :name="_name" v-model="duration.minutes" /></td>' +
+        '        <td v-if="displaySeconds"><VFormInput type="number" :name="_name" v-model="duration.seconds" /></td>' +
         '    </tr>' +
         '    <tr>' +
         '        <td v-if="displayDays">Days</td>' +
@@ -42,34 +34,40 @@ VForm.components.VFormDuration = VForm.components.VFormInput.extend({
         '        <td v-if="displaySeconds">Seconds</td>' +
         '    </tr>' +
         '</table>',
-    methods: {
-        decode: function (value) {
-            var days = Math.floor(value / 86400);
+    mounted: function () {
+        if (this._value === '' || this._value === null) {
+            this._value = 0;
+        }
 
-            value = value % 86400;
+        var total = parseInt(this._value, 10);
 
-            var hours = Math.floor(value / 3600);
+        this.duration.seconds = total % 60;
 
-            value = value % 3600;
+        total = Math.floor(total / 60);
 
-            var minutes = Math.floor(value / 60);
+        this.duration.minutes = total % 60;
 
-            value = value % 3600;
+        total = Math.floor(total / 60);
 
-            var seconds = Math.floor(value);
+        if (this.displayDays) {
+            this.duration.hours = total % 24;
+            this.duration.days  = Math.floor(total / 24);
+        } else {
+            this.duration.hours = total;
+            this.duration.days  = 0;
+        }
+    },
+    watch: {
+        duration: {
+            deep:    true,
+            handler: function (value) {
+                var days    = parseInt(value.days, 10) || 0;
+                var hours   = parseInt(value.hours, 10) || 0;
+                var minutes = parseInt(value.minutes, 10) || 0;
+                var seconds = parseInt(value.seconds, 10) || 0;
 
-            return {
-                days: days,
-                hours: hours,
-                minutes: minutes,
-                seconds: seconds
+                this._value = seconds + (minutes * 60) + (hours * 60 * 60) + (days * 24 * 60 * 60);
             }
-        },
-        encode: function (value) {
-            return ((value.days || 0) * 86400)
-                + ((value.hours || 0) * 3600)
-                + ((value.minutes || 0) * 60)
-                + (value.seconds || 0);
         }
     }
 });
