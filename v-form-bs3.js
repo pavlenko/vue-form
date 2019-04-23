@@ -120,3 +120,7 @@ VForm.components.VFormRange = VForm.components.VFormRange.extend({
         }.bind(this));
     }
 });
+
+VForm.components.VFormTextarea = VForm.components.VFormTextarea.extend({
+    template: '<textarea ref="field" class="form-control" :id="_id" :name="_name" :cols="cols" :rows="rows" v-model="_value"></textarea>'
+});

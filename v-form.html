@@ -27,6 +27,7 @@
 <script src="v-form-number.js"></script>
 <script src="v-form-range.js"></script>
 <script src="v-form-duration.js"></script>
+<script src="v-form-textarea.js"></script>
 <script src="v-form-validate.js"></script>
 <script src="v-form-bs3.js"></script>
 <script>
@@ -59,6 +60,7 @@
             '<div><VFormNumber v-model="value.number" v-bind:error.sync="error.number" v-validate-rules="{required: true}" /></div>' +
             '<div><VFormRange v-model="value.range" v-bind:error.sync="error.range" v-validate-rules="{required: true}" /></div>' +
             '<div><VFormDuration v-model="value.duration" v-bind:error.sync="error.duration" v-validate-rules="{required: true}" /></div>' +
+            '<div><VFormTextarea v-model="value.text" v-bind:error.sync="error.text" v-validate-rules="{required: true}" /></div>' +
             '{{value}}{{error}}' +
             '</div>'
     });
