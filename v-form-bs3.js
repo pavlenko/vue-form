@@ -87,3 +87,36 @@ VForm.components.VFormChoice = VForm.components.VFormChoice.extend({
         '    <VFormCheckbox v-for="choice in _choices" ref="field" :inline="true" :key="choice.id" :name="_name" :label="choice.label" v-model="selected[choice.id]" :check="choice.id" />' +
         '</div>'
 });
+
+VForm.components.VFormRange = VForm.components.VFormRange.extend({
+    props: {
+        range: {
+            type:    Boolean,
+            default: false
+        },
+        tooltip: {
+            type:    String,
+            default: 'hide'
+        },
+        handle: {
+            type:    String,
+            default: 'round'
+        }
+    },
+    mounted: function () {
+        this.$refs.field.style.width = '100%';
+
+        //TODO display value in handle block
+        new Slider(this.$refs.field, {
+            range:   this.range,
+            step:    this.step,
+            min:     this.min,
+            max:     this.max,
+            value:   this.range && !(this.value instanceof Array) ? [this.min, this.max] : this.value || 0,
+            tooltip: this.tooltip,
+            handle:  this.handle
+        }).on('change', function (data) {
+            this.$emit('input', data.newValue);
+        }.bind(this));
+    }
+});
